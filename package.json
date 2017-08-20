@@ -1,0 +1,30 @@
+{
+  "name": "liri_bot",
+  "version": "1.0.0",
+  "description": "LIRI Bot ",
+  "main": "run.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krisxcrash/liri_bot.git"
+  },
+  "keywords": [
+    "API",
+    "Language",
+    "Interpretation",
+    "Spotify",
+    "OMDB",
+    "Twitter"
+  ],
+  "author": "Kristine Martin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krisxcrash/liri_bot/issues"
+  },
+  "homepage": "https://github.com/krisxcrash/liri_bot#readme",
+  "dependencies": {
+    "node-spotify-api": "^1.0.7"
+  }
+}
