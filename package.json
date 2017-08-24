@@ -25,7 +25,9 @@
   },
   "homepage": "https://github.com/krisxcrash/liri_bot#readme",
   "dependencies": {
+    "fs": "0.0.1-security",
     "node-spotify-api": "^1.0.7",
+    "request": "^2.81.0",
     "twitter": "^1.7.1"
   }
 }

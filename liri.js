@@ -1,157 +1,172 @@
 // use ${searchTerm} instead of + searchTerm + in query URL. This is ES6
 
+	//create function to call within each if statement
+//still need to add spotify details - define variables and console.log
+	// Artist(s)
+	// The song's name
+	// A preview link of the song from Spotify
+	// The album that the song is from
+//need to read from random.txt file and pull song data into spotify function
+
+
 
 var input = process.argv;
 var userInput = process.argv[2];
 
 var fs = require("fs");
-var omdb = require("request");
+var exportTKeys = require("./keys.js");
+var request = require("request");
 var Spotify = require('node-spotify-api');
 var Twitter = require('twitter');
 
+var params = {screen_name: 'krisloveschad'};
 var selection = "";
+var appendData = "";
 
 for (var i = 3; i < input.length; i++) {
-	var selection = input[i];
-	// if (i > 3 && i < input.length) {
-	// 	selection = selection + "+" + input[i];
-	// }
-	// else {
-	// 	selection += input[i];
-	// }
-}
-
-// my-tweets
-// spotify-this-song
-// movie-this
-// do-what-it-says
-
-if (userInput === "my-tweets") {
-	//run twitter API
-
-		// var client = new Twitter({
-		// 	consumer_key: process.env.TWITTER_CONSUMER_KEY,
-		// 	consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-		// 	access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-		// 	access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
-		//   });
-
-		// 	const getBearerToken = require('get-twitter-bearer-token')
-			
-		//    const twitter_consumer_key = 'wg3UG2HSoKl7zpYiEme5VpfDB'
-		//    const twitter_consumer_secret = 'NdeSChBtt6JmqwdPiDUPr26QofSYzVYLbqRP8IgDTkwOb7XIyz'
-
-	var client = new Twitter({
-		consumer_key: 'wg3UG2HSoKl7zpYiEme5VpfDB',
-		consumer_secret: 'NdeSChBtt6JmqwdPiDUPr26QofSYzVYLbqRP8IgDTkwOb7XIyz',
-		access_token_key: '	898354256247373825-zgeSJsaAHIEhRpzS8KojqiPYAvebpgn',
-		access_token_secret: 'dXz083H2dfig5Nwe2ZEvVW4K0acsx4hbcKA7PS9XUbX85'
-	});
 	
-   var params = {screen_name: 'krisloveschad'};
-   client.get('statuses/user_timeline', params, function(error, tweets, response) {
-		if (!error) {
-			console.log(tweets);
-		} else {
-			throw error
-	 }
-   });
-
-}
-else if (userInput === "spotify-this-song") {
-
-	//run spotify API
-	//if userInput = null, default to "The Sign" by Ace of Base.
-
-	if (input[3] === null) {
-		
-		var spotify = new Spotify({
-			id: '8439f575fb0d4ceb9ea04e42b15fa86a',
-			secret: '8252f28123e1467aa6ffeee966629cff'
-		  });
-	
-			spotify
-			.request('https://api.spotify.com/v1/tracks/3DYVWvPh3kGwPasp7yjahc')
-			.then(function(data) {
-			console.log(data); 
-			})
-			.catch(function(err) {
-			console.error('Error occurred: ' + err); 
-			});
-		//
+	if (i > 3 && i < input.length) {
+		selection = selection + "+" + input[i];
 	}
 	else {
+		selection += input[i];
+	};
+}
 
-	/*
-	Artist(s)
-	The song's name
-	A preview link of the song from Spotify
-	The album that the song is from
-	*/
+if (userInput === "my-tweets") {
 
-		// bearer BQDJnt_gJug6lfUjG67T5ynHhadZRAiIkj_88TjpkComyl4ct0fL2Lo94Wxe01T-RZ0mtfpT5ZVGgUoCSaCc7jgcTVcBigAKizrKIHi8MFUIF7lm2eqGv8szVQaPxYPv0K-p5_-mXlzJglA
+	var client = new Twitter({
+		consumer_key: exportTKeys.twitterKeys.consumer_key,
+		consumer_secret: exportTKeys.twitterKeys.consumer_secret,
+		access_token_key: exportTKeys.twitterKeys.access_token_key,
+		access_token_secret: exportTKeys.twitterKeys.access_token_secret
+	});
+	
+   client.get('statuses/user_timeline', params, function(error, tweets, response) {
+		if (!error) {
+
+			var myTweets = "";
+
+			for (var i = 0; i < tweets.length; i++) {
+				var element = tweets[i];
+
+				myTweets = tweets[i].text + "\n";
+				console.log(myTweets);
+
+				fs.appendFile("log.txt", "\n" + myTweets + "\n", function(err) {
+					if (err) {
+						return console.log(err);
+					}
+				});
+			};
+		} 
+   });
+}
+
+else if (userInput === "spotify-this-song") {
+	if (selection === "") {
+		selection = "The Sign";
+
+		spotify();
+
+	} else {
+		spotify();
+	}
+}
+else if (userInput === "movie-this") {
+
+	if (selection === "") {
+		selection = "Mr.+Nobody";
+	}
+
+	var queryURL = "http://www.omdbapi.com/?t=" + selection + "&y=&plot=short&apikey=40e9cece"
+
+	request(queryURL, function(error, response, data) {
+
+		if (!error && response.statusCode === 200) {
+			var omdbTitle = "Title: " + JSON.parse(data).Title;
+			var omdbYear = "Year: " + JSON.parse(data).Year;
+			var omdbRating = "IMDB Rating: " + JSON.parse(data).imdbRating;
+			var omdbRT = "Rotten Tomatoes: " + JSON.parse(data).Ratings[1].Value;
+			var omdbCountry = "Country: " + JSON.parse(data).Country;
+			var omdbLang = "Language: " + JSON.parse(data).Language;
+			var omdbPlot = "Plot: " + JSON.parse(data).Plot;
+			var omdbActors = "Actors: " + JSON.parse(data).Actors;
+
+			var movieThis = "\nHere\'s some information about the movie you requested:\n" + omdbTitle + "\n" + omdbYear + "\n" + omdbRating + "\n" + omdbRT  + "\n" + omdbCountry + "\n" + omdbLang + "\n" + omdbPlot + "\n" + omdbActors + "\n";
+
+			console.log(movieThis);
+
+			fs.appendFile("log.txt", "\n" + movieThis + "\n", function(err) {
+				if (err) {
+					return console.log(err);
+				}
+			});
+		};
+	});
+}
+else if (userInput === "do-what-it-says") {
+	// run spotify-this-song for "I Want it That Way," as follows the text in random.txt
+
+	var randomSong = "";
+
+	fs.readFile("random.txt", "utf8", function(error,data) {
+		randomSong = data;
+		
+		console.log(data);
+	});
+
+	spotify();
+
+	fs.appendFile("log.txt", "\n" + randomSong + "\n", function(err) {
+		if (err) {
+			return console.log(err);
+		  }
+		});
+	};
+
+function spotify() {
+	var found = false; 
 
 	var spotify = new Spotify({
 		id: '8439f575fb0d4ceb9ea04e42b15fa86a',
 		secret: '8252f28123e1467aa6ffeee966629cff'
 	  });
 
-		spotify
-		.request('https://api.spotify.com/v1/https://api.spotify.com/v1/search?q=' + selection + '&type=track')
-		.then(function(data) {
-		console.log(data); 
-		})
-		.catch(function(err) {
-		console.error('Error occurred: ' + err); 
-		});
-
-	}
-}
-else if (userInput === "movie-this") {
-	//run OMDB API
-	//if userInput = null, default to "Mr. Nobody"
-
-	if (input[3] === null) {
-		selection = "mr+nobody";
-	}
-	else {
-		selection = selection;
-	}
-
-	omdb("http://www.omdbapi.com/?t=" + selection + "&y=&plot=short&apikey=40e9cece", function(error, response, data) {
-
-		if (!error && response.statusCode === 200) {
-			console.log("\nHere\'s some information about the movie you requested:")
-			console.log("Title: " + JSON.parse(data).Title);
-			console.log("Year: " + JSON.parse(data).Year);
-			console.log("IMDB Rating: " + JSON.parse(data).imdbRating);
-			console.log("Rotten Tomatoes: " + JSON.parse(data).Ratings[1].Value);
-			console.log("Country: " + JSON.parse(data).Country);
-			console.log("Language: " + JSON.parse(data).Language);
-			console.log("Plot: " + JSON.parse(data).Plot);
-			console.log("Actors: " + JSON.parse(data).Actors);
-		};
-	});
-
-	write();
-}
-else if (userInput === "do-what-it-says") {
-	// run spotify-this-song for "I Want it That Way," as follows the text in random.txt
-};
-
-//function to append user input to log.txt
-
-function write() {
-
-	userInputWrite = "";
-	
-	for (var i = 3; i < input.length; i++) {
-		var userInputWrite = input[i];
-	};
-
-	fs.appendFile("log.txt", "\nUser Request: " + userInputWrite, function(err) {
+	  spotify.search({ type: 'track', query: selection }, function(err, data) {
 		if (err) {
-			return console.log(err);
-		  }
-		});
-	};
+		  return console.log('Error occurred: ' + err);
+		}
+	   
+	//JSON Stringify data then JSON.parse 
+
+		var jData = (JSON.stringify(data));
+
+		for (var j = 0; j < JSON.parse(jData).tracks.items.length; j++) {
+			if ( selection === JSON.parse(jData).tracks.items[j].name) {
+		
+				var artist = "Artist: " + JSON.parse(jData).tracks.items[j].album.artists[0].name;
+				var song = "Song Name: " + JSON.parse(jData).tracks.items[j].name;
+				var album = "Album: " + JSON.parse(jData).tracks.items[j].album.name;
+				var preview = "Preview: " + JSON.parse(jData).tracks.items[j].preview_url;
+
+				var spotifyCombined = "\n" + artist + "\n" + song+ "\n" + album + "\n" + preview + "\n";
+				
+				console.log(spotifyCombined);
+
+				fs.appendFile("log.txt", "\n" + spotifyCombined + "\n", function(err) {
+					if (err) {
+						return console.log(err);
+					}
+				});
+
+			found = true;	
+			break;
+		}
+	}
+
+	if (!found) {
+		console.log("We apologize but that song could not be found.")
+	}
+	});
+}
