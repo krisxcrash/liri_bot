@@ -1,9 +1,4 @@
-// use ${searchTerm} instead of + searchTerm + in query URL. This is ES6
-
-//need to read from random.txt file and pull song data into spotify function
-
-
-
+// Variables
 var input = process.argv;
 var userInput = process.argv[2];
 
@@ -15,7 +10,8 @@ var Twitter = require('twitter');
 
 var params = {screen_name: 'krisloveschad'};
 var selection = "";
-var appendData = "";
+
+// Pulls in user request 
 
 for (var i = 3; i < input.length; i++) {
 	
@@ -26,6 +22,8 @@ for (var i = 3; i < input.length; i++) {
 		selection += input[i];
 	};
 };
+
+// Twitter API
 
 if (userInput === "my-tweets") {
 
@@ -57,6 +55,8 @@ if (userInput === "my-tweets") {
    });
 }
 
+// Spotify Request - if user does not provide a selection, returns "The Sign" by Ace of Base, otherwise returns user selection data
+
 else if (userInput === "spotify-this-song") {
 	if (selection === "") {
 		selection = "The Sign";
@@ -68,6 +68,9 @@ else if (userInput === "spotify-this-song") {
 		spotify();
 	};
 }
+
+// OMDB API - If user does not provide a selection, default is Mr. Nobody, otherwise returns user selection
+
 else if (userInput === "movie-this") {
 
 	if (selection === "") {
@@ -100,6 +103,9 @@ else if (userInput === "movie-this") {
 		};
 	});
 }
+
+// Random selection that returns "I Want it That Way" from random.txt using the Spotify API 
+
 else if (userInput === "do-what-it-says") {
 	// run spotify-this-song for "I Want it That Way," as follows the text in random.txt
 	fs.readFile("random.txt", "utf8", function(error, data) {
@@ -108,6 +114,8 @@ else if (userInput === "do-what-it-says") {
 		spotify();
 	});
 };
+
+// Spotify function that runs for "spotify-this-song" as well as "do-what-it-says"
 
 function spotify() {
 	var found = false; 
