@@ -1,11 +1,5 @@
 // use ${searchTerm} instead of + searchTerm + in query URL. This is ES6
 
-	//create function to call within each if statement
-//still need to add spotify details - define variables and console.log
-	// Artist(s)
-	// The song's name
-	// A preview link of the song from Spotify
-	// The album that the song is from
 //need to read from random.txt file and pull song data into spotify function
 
 
@@ -31,7 +25,7 @@ for (var i = 3; i < input.length; i++) {
 	else {
 		selection += input[i];
 	};
-}
+};
 
 if (userInput === "my-tweets") {
 
@@ -56,10 +50,10 @@ if (userInput === "my-tweets") {
 				fs.appendFile("log.txt", "\n" + myTweets + "\n", function(err) {
 					if (err) {
 						return console.log(err);
-					}
+					};
 				});
 			};
-		} 
+		};
    });
 }
 
@@ -70,14 +64,15 @@ else if (userInput === "spotify-this-song") {
 		spotify();
 
 	} else {
+
 		spotify();
-	}
+	};
 }
 else if (userInput === "movie-this") {
 
 	if (selection === "") {
 		selection = "Mr.+Nobody";
-	}
+	};
 
 	var queryURL = "http://www.omdbapi.com/?t=" + selection + "&y=&plot=short&apikey=40e9cece"
 
@@ -100,30 +95,19 @@ else if (userInput === "movie-this") {
 			fs.appendFile("log.txt", "\n" + movieThis + "\n", function(err) {
 				if (err) {
 					return console.log(err);
-				}
+				};
 			});
 		};
 	});
 }
 else if (userInput === "do-what-it-says") {
 	// run spotify-this-song for "I Want it That Way," as follows the text in random.txt
+	fs.readFile("random.txt", "utf8", function(error, data) {
+		selection = data;
 
-	var randomSong = "";
-
-	fs.readFile("random.txt", "utf8", function(error,data) {
-		randomSong = data;
-		
-		console.log(data);
+		spotify();
 	});
-
-	spotify();
-
-	fs.appendFile("log.txt", "\n" + randomSong + "\n", function(err) {
-		if (err) {
-			return console.log(err);
-		  }
-		});
-	};
+};
 
 function spotify() {
 	var found = false; 
@@ -138,17 +122,16 @@ function spotify() {
 		  return console.log('Error occurred: ' + err);
 		}
 	   
-	//JSON Stringify data then JSON.parse 
-
-		var jData = (JSON.stringify(data));
-
-		for (var j = 0; j < JSON.parse(jData).tracks.items.length; j++) {
-			if ( selection === JSON.parse(jData).tracks.items[j].name) {
+		var jData = data;
 		
-				var artist = "Artist: " + JSON.parse(jData).tracks.items[j].album.artists[0].name;
-				var song = "Song Name: " + JSON.parse(jData).tracks.items[j].name;
-				var album = "Album: " + JSON.parse(jData).tracks.items[j].album.name;
-				var preview = "Preview: " + JSON.parse(jData).tracks.items[j].preview_url;
+		for (var j = 0; j < jData.tracks.items.length; j++) {
+			var testReg = new RegExp(selection, 'i');
+			if ( testReg.test(jData.tracks.items[j].name) ) {
+		
+				var artist = "Artist: " + jData.tracks.items[j].album.artists[0].name;
+				var song = "Song Name: " + jData.tracks.items[j].name;
+				var album = "Album: " + jData.tracks.items[j].album.name;
+				var preview = "Preview: " + jData.tracks.items[j].preview_url;
 
 				var spotifyCombined = "\n" + artist + "\n" + song+ "\n" + album + "\n" + preview + "\n";
 				
@@ -162,11 +145,11 @@ function spotify() {
 
 			found = true;	
 			break;
-		}
-	}
+		};
+	};
 
-	if (!found) {
-		console.log("We apologize but that song could not be found.")
-	}
+		if (!found) {
+			console.log("We apologize but that song could not be found.")
+		};
 	});
-}
+};
