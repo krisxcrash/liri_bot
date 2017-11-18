@@ -58,6 +58,6 @@ typings/
 .env
 
 #Keys
-keys.js
+./keys.js
 
-heroku/
+/heroku/
