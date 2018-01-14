@@ -1,13 +1,11 @@
 // Variables
 var input = process.argv;
 var userInput = process.argv[2];
-
 var fs = require("fs");
 var exportTKeys = require("./keys.js");
 var request = require("request");
 var Spotify = require('node-spotify-api');
 var Twitter = require('twitter');
-
 var params = {screen_name: 'krisloveschad'};
 var selection = "";
 
@@ -60,11 +58,8 @@ if (userInput === "my-tweets") {
 else if (userInput === "spotify-this-song") {
 	if (selection === "") {
 		selection = "The Sign";
-
 		spotify();
-
 	} else {
-
 		spotify();
 	};
 }
@@ -140,7 +135,6 @@ function spotify() {
 				var song = "Song Name: " + jData.tracks.items[j].name;
 				var album = "Album: " + jData.tracks.items[j].album.name;
 				var preview = "Preview: " + jData.tracks.items[j].preview_url;
-
 				var spotifyCombined = "\n" + artist + "\n" + song+ "\n" + album + "\n" + preview + "\n";
 				
 				console.log(spotifyCombined);

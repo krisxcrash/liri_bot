@@ -3,7 +3,6 @@ Language Interpretation and Recognition Interface Bot
 
 This is a backend application that pulls in the Spotify, IMDB, and Twitter API's.
 
-
 ### What Each Command Should Do
 
 1. `node liri.js my-tweets`
@@ -15,11 +14,8 @@ This is a backend application that pulls in the Spotify, IMDB, and Twitter API's
    * This will show the following information about the song in your terminal/bash window
      
      * Artist(s)
-     
      * The song's name
-     
      * A preview link of the song from Spotify
-     
      * The album that the song is from
 
    * If no song is provided then it program will default to "The Sign" by Ace of Base.
@@ -28,7 +24,6 @@ This is a backend application that pulls in the Spotify, IMDB, and Twitter API's
 
    * This will output the following information to the terminal/bash window:
 
-     ```
        * Title of the movie.
        * Year the movie came out.
        * IMDB Rating of the movie.
@@ -37,7 +32,6 @@ This is a backend application that pulls in the Spotify, IMDB, and Twitter API's
        * Language of the movie.
        * Plot of the movie.
        * Actors in the movie.
-     ```
 
    * If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
 
