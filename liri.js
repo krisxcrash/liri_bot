@@ -126,7 +126,6 @@ function spotify() {
 		}
 	   
 		var jData = data;
-		
 		for (var j = 0; j < jData.tracks.items.length; j++) {
 			var testReg = new RegExp(selection, 'i');
 			if ( testReg.test(jData.tracks.items[j].name) ) {
